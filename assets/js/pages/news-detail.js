@@ -1,0 +1,2 @@
+// Page JS: news-detail
+

@@ -1,0 +1,2 @@
+// Admin page JS: index
+

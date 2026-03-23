@@ -1,0 +1,2 @@
+// Page JS: place-detail
+

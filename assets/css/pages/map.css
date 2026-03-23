@@ -1,0 +1,95 @@
+/* Page CSS: map */
+
+.map-tools {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 14px;
+}
+
+.map-filter-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	border: 1px solid #cfe2d2;
+	border-radius: 999px;
+	background: #f8fcf8;
+	color: #274133;
+	font-size: 0.92rem;
+	font-weight: 500;
+	padding: 8px 12px;
+}
+
+.map-filter-item input {
+	accent-color: #2e7d32;
+}
+
+#tourism-map {
+	border: 1px solid #d8e6da;
+}
+
+.leaflet-control-zoom {
+	border: none;
+	box-shadow: 0 10px 18px rgba(0, 0, 0, 0.14);
+}
+
+.leaflet-control-zoom a {
+	border: none;
+}
+
+.custom-map-marker {
+	background: transparent;
+	border: none;
+}
+
+.map-marker-dot {
+	display: block;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: var(--marker-color, #e53935);
+	border: 2px solid #ffffff;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+}
+
+.leaflet-popup-content-wrapper {
+	border-radius: 12px;
+	padding: 2px;
+}
+
+.leaflet-popup-content {
+	margin: 10px 12px;
+}
+
+.leaflet-popup-body {
+	min-width: 210px;
+}
+
+.leaflet-popup-title {
+	margin: 0 0 7px;
+	font-size: 1rem;
+	line-height: 1.35;
+	color: #1f2f24;
+}
+
+.leaflet-popup-address {
+	margin: 0 0 9px;
+	font-size: 0.9rem;
+	color: #5d6f66;
+}
+
+.leaflet-popup-link {
+	font-weight: 600;
+}
+
+@media (max-width: 768px) {
+	.map-tools {
+		gap: 8px;
+	}
+
+	.map-filter-item {
+		width: 100%;
+		justify-content: flex-start;
+	}
+}
+

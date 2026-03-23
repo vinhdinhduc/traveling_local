@@ -1,0 +1,11 @@
+# robots.txt - Du lịch Vân Hồ
+User-agent: *
+Allow: /
+
+# Chặn admin
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /uploads/
+
+# Sitemap
+Sitemap: http://localhost/vanho-tourism/sitemap.xml
