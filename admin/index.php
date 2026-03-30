@@ -10,6 +10,21 @@ $totalFoods = countRecords($pdo, 'foods');
 $totalHomestays = countRecords($pdo, 'homestays');
 $totalUsers = countRecords($pdo, 'users');
 $totalReviews = countRecords($pdo, 'reviews');
+$totalBookings = countRecords($pdo, 'homestay_bookings');
+
+$stmtRevenue = $pdo->query("SELECT COALESCE(SUM(amount), 0) AS total_revenue FROM payments WHERE status = 'success'");
+$totalRevenue = (float)($stmtRevenue->fetch()['total_revenue'] ?? 0);
+
+$stmtTopPlaces = $pdo->query('SELECT name, views FROM places ORDER BY views DESC, id ASC LIMIT 5');
+$topPlaces = $stmtTopPlaces->fetchAll();
+
+$stmtTopHomestays = $pdo->query('SELECT h.name, COUNT(b.id) AS booking_count
+    FROM homestays h
+    LEFT JOIN homestay_bookings b ON b.homestay_id = h.id AND b.status <> "cancelled"
+    GROUP BY h.id, h.name
+    ORDER BY booking_count DESC, h.id ASC
+    LIMIT 5');
+$topHomestays = $stmtTopHomestays->fetchAll();
 
 // Tổng lượt xem
 $stmtViews = $pdo->query("SELECT COALESCE(SUM(views), 0) as total FROM (
@@ -102,6 +117,84 @@ $recentContacts = $stmtRecentContacts->fetchAll();
             <h3><?= $totalReviews ?></h3>
             <p>Đánh giá</p>
         </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon places">
+            <i class="fas fa-calendar-check"></i>
+        </div>
+        <div class="stat-info">
+            <h3><?= $totalBookings ?></h3>
+            <p>Tổng booking</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon contacts">
+            <i class="fas fa-coins"></i>
+        </div>
+        <div class="stat-info">
+            <h3><?= formatPrice($totalRevenue) ?></h3>
+            <p>Doanh thu thanh toán</p>
+        </div>
+    </div>
+</div>
+
+<div class="stats-grid" style="grid-template-columns:1fr 1fr;align-items:start">
+    <div class="table-wrapper">
+        <div class="table-header">
+            <h3><i class="fas fa-map-marked-alt" style="color:var(--admin-primary)"></i> Top địa điểm (theo lượt xem)</h3>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Địa điểm</th>
+                    <th>Lượt xem</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (count($topPlaces) > 0): ?>
+                    <?php foreach ($topPlaces as $row): ?>
+                        <tr>
+                            <td><?= sanitize($row['name']) ?></td>
+                            <td><?= number_format((int)$row['views']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="2" style="text-align:center;padding:22px">Chưa có dữ liệu.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-wrapper">
+        <div class="table-header">
+            <h3><i class="fas fa-house" style="color:var(--admin-secondary)"></i> Top homestay (theo booking)</h3>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Homestay</th>
+                    <th>Booking</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (count($topHomestays) > 0): ?>
+                    <?php foreach ($topHomestays as $row): ?>
+                        <tr>
+                            <td><?= sanitize($row['name']) ?></td>
+                            <td><?= (int)$row['booking_count'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="2" style="text-align:center;padding:22px">Chưa có dữ liệu.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 </div>
 

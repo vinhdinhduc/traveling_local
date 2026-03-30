@@ -2,7 +2,8 @@
 
 
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/functions.php';
+require_once dirname(__DIR__) . '/functions.php';
+require_once __DIR__ . '/settings.php';
 
 // Xác định trang hiện tại để active menu
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
@@ -10,6 +11,10 @@ $currentUser = getCurrentUser($pdo);
 $safePageName = preg_replace('/[^a-z0-9\-]/i', '', $currentPage);
 $publicPageCssRel = '/assets/css/pages/' . $safePageName . '.css';
 $publicPageCssAbs = dirname(__DIR__) . $publicPageCssRel;
+
+// Lấy cấu hình từ DB
+$contactSettings = getSettingsByGroup($pdo, 'contact');
+$socialSettings  = getSettingsByGroup($pdo, 'social');
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -91,13 +96,59 @@ $publicPageCssAbs = dirname(__DIR__) . $publicPageCssRel;
         <div class="loader-spinner"></div>
     </div>
 
+    <!-- Top Bar -->
+    <div class="header-topbar" id="header-topbar">
+        <div class="container topbar-inner">
+            <div class="topbar-left">
+                <span class="topbar-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <?= sanitize($contactSettings['site_address'] ?? 'Vân Hồ, Sơn La') ?>
+                </span>
+                <span class="topbar-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <?= sanitize($contactSettings['site_phone'] ?? '') ?>
+                </span>
+                <span class="topbar-item">
+                    <i class="fas fa-clock"></i>
+                    <?= sanitize($contactSettings['site_working_hours'] ?? '') ?>
+                </span>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-lang">
+                    <i class="fas fa-globe"></i>
+                    Tiếng Việt
+                </div>
+                <div class="topbar-social">
+                    <?php if (!empty($socialSettings['facebook_url'])): ?>
+                        <a href="<?= sanitize($socialSettings['facebook_url']) ?>" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <?php endif; ?>
+                    <?php if (!empty($socialSettings['zalo_url'])): ?>
+                        <a href="<?= sanitize($socialSettings['zalo_url']) ?>" target="_blank" rel="noopener" title="Zalo" aria-label="Zalo"><i class="fas fa-comment-dots"></i></a>
+                    <?php endif; ?>
+                    <?php if (!empty($socialSettings['youtube_url'])): ?>
+                        <a href="<?= sanitize($socialSettings['youtube_url']) ?>" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <?php endif; ?>
+                    <?php if (!empty($socialSettings['tiktok_url'])): ?>
+                        <a href="<?= sanitize($socialSettings['tiktok_url']) ?>" target="_blank" rel="noopener" title="TikTok" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Header -->
-    <header class="header">
+    <header class="header" id="main-header">
         <div class="container header-inner">
+
             <!-- Logo -->
             <a href="<?= SITE_URL ?>" class="logo">
-                <i class="fas fa-mountain" style="font-size:1.8rem;color:var(--primary)"></i>
-                Du lịch <span>Vân Hồ</span>
+                <div class="logo-icon-wrap">
+                    <i class="fas fa-mountain"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-sub">Du lịch</span>
+                    <span class="logo-name">Vân <span>Hồ</span></span>
+                </div>
             </a>
 
             <!-- Navigation -->
@@ -125,22 +176,28 @@ $publicPageCssAbs = dirname(__DIR__) . $publicPageCssRel;
                 </a>
 
                 <?php if ($currentUser): ?>
-                    <a href="<?= SITE_URL ?>/logout.php">
-                        <i class="fas fa-sign-out-alt"></i> Xin chào, <?= sanitize($_SESSION['user_name'] ?? 'Bạn') ?>
+                    <a href="<?= SITE_URL ?>/wishlist.php" class="<?= $currentPage === 'wishlist' ? 'active' : '' ?>">
+                        <i class="fas fa-heart"></i> Yêu thích
+                    </a>
+                    <a href="<?= SITE_URL ?>/profile.php" class="<?= $currentPage === 'profile' ? 'active' : '' ?>">
+                        <i class="fas fa-user-circle"></i> <?= sanitize($_SESSION['user_name'] ?? 'Tài khoản') ?>
+                    </a>
+                    <a href="<?= SITE_URL ?>/logout.php" class="nav-logout">
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
                     </a>
                 <?php else: ?>
-                    <a href="<?= SITE_URL ?>/login.php" class="<?= $currentPage === 'login' ? 'active' : '' ?>">
+                    <a href="<?= SITE_URL ?>/login.php" class="nav-login <?= $currentPage === 'login' ? 'active' : '' ?>">
                         <i class="fas fa-right-to-bracket"></i> Đăng nhập
                     </a>
                 <?php endif; ?>
             </nav>
 
             <!-- Hamburger Menu -->
-            <div class="hamburger" id="hamburger">
+            <button class="hamburger" id="hamburger" aria-label="Mở menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
         </div>
     </header>
 

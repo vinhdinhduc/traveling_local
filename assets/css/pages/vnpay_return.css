@@ -1,0 +1,119 @@
+.vnpay-return-container {
+    max-width: 620px;
+    margin: 50px auto;
+    padding: 0 16px;
+}
+
+.result-banner {
+    border-radius: 14px;
+    padding: 36px 32px 28px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .1);
+}
+
+.result-banner.success {
+    background: linear-gradient(135deg, #e6f9ec, #cdf5d7);
+    border: 2px solid #68d391;
+}
+
+.result-banner.failed {
+    background: linear-gradient(135deg, #fde8e8, #ffd1d1);
+    border: 2px solid #fc8181;
+}
+
+.result-banner .icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.result-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.result-title.success {
+    color: #22543d;
+}
+
+.result-title.failed {
+    color: #742a2a;
+}
+
+.result-desc {
+    font-size: .97rem;
+    color: #555;
+}
+
+.detail-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .07);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+}
+
+.detail-card h3 {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px dashed #f0f0f0;
+    font-size: .92rem;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row .label {
+    color: #777;
+}
+
+.detail-row .value {
+    font-weight: 600;
+    text-align: right;
+    max-width: 65%;
+    word-break: break-all;
+}
+
+.amount-value {
+    font-size: 1.25rem;
+    color: #d62b1f;
+    font-weight: 800;
+}
+
+.security-note {
+    background: #fffbea;
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: .82rem;
+    color: #78350f;
+    margin-bottom: 20px;
+}
+
+.btn-group-action {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.badge-invalid {
+    background: #fde8e8;
+    color: #721c24;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: .78rem;
+    font-weight: 700;
+}

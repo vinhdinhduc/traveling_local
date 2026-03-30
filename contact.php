@@ -82,7 +82,7 @@ $csrfToken = generateCsrfToken();
                     <i class="fas fa-map-marker-alt"></i>
                     <div>
                         <h4>Địa chỉ</h4>
-                        <p>UBND xã Vân Hồ, tỉnh Sơn La</p>
+                        <p><?= sanitize($contactSettings['site_address'] ?? '') ?></p>
                     </div>
                 </div>
 
@@ -90,7 +90,7 @@ $csrfToken = generateCsrfToken();
                     <i class="fas fa-phone-alt"></i>
                     <div>
                         <h4>Điện thoại</h4>
-                        <p>0212 365 374</p>
+                        <p><?= sanitize($contactSettings['site_phone_2'] ?? $contactSettings['site_phone'] ?? '') ?></p>
                     </div>
                 </div>
 
@@ -98,7 +98,7 @@ $csrfToken = generateCsrfToken();
                     <i class="fas fa-envelope"></i>
                     <div>
                         <h4>Email</h4>
-                        <p>dulich@vanho.sonla.gov.vn</p>
+                        <p><?= sanitize($contactSettings['site_email'] ?? '') ?></p>
                     </div>
                 </div>
 
@@ -106,15 +106,18 @@ $csrfToken = generateCsrfToken();
                     <i class="fas fa-clock"></i>
                     <div>
                         <h4>Giờ làm việc</h4>
-                        <p>Thứ 2 - Thứ 6: 7:30 - 17:00<br>Thứ 7: 7:30 - 11:30</p>
+                        <p><?= nl2br(sanitize($contactSettings['site_working_hours_detail'] ?? '')) ?></p>
                     </div>
                 </div>
 
                 <!-- Bản đồ -->
                 <div class="contact-map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14868.793!2d104.809!3d20.745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjDCsDQ0JzQyLjAiTiAxMDTCsDQ4JzMyLjQiRQ!5e0!3m2!1svi!2s!4v1"
-                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy">
-                    </iframe>
+                    <?php $mapUrl = $contactSettings['site_map_embed'] ?? ''; ?>
+                    <?php if (!empty($mapUrl)): ?>
+                        <iframe src="<?= sanitize($mapUrl) ?>"
+                            width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    <?php endif; ?>
                 </div>
             </div>
 

@@ -9,6 +9,17 @@ $currentPageNum = getCurrentPage();
 $perPage = ITEMS_PER_PAGE;
 $keyword = trim($_GET['keyword'] ?? '');
 $maxPrice = (int)($_GET['max_price'] ?? 0);
+$sort = $_GET['sort'] ?? 'newest';
+
+$allowedSort = [
+    'newest' => 'created_at DESC',
+    'price_asc' => 'price_per_night ASC',
+    'price_desc' => 'price_per_night DESC',
+    'popular' => 'views DESC, created_at DESC'
+];
+if (!isset($allowedSort[$sort])) {
+    $sort = 'newest';
+}
 
 $whereParts = [];
 $params = [];
@@ -30,7 +41,7 @@ $stmtCount->execute();
 $totalHomestays = (int)$stmtCount->fetchColumn();
 $offset = ($currentPageNum - 1) * $perPage;
 
-$stmt = $pdo->prepare('SELECT * FROM homestays' . $whereSql . ' ORDER BY created_at DESC LIMIT :limit OFFSET :offset');
+$stmt = $pdo->prepare('SELECT * FROM homestays' . $whereSql . ' ORDER BY ' . $allowedSort[$sort] . ' LIMIT :limit OFFSET :offset');
 foreach ($params as $key => $value) {
     $stmt->bindValue($key, $value);
 }
@@ -74,6 +85,15 @@ $homestays = $stmt->fetchAll();
                         <option value="1200000" <?= $maxPrice === 1200000 ? 'selected' : '' ?>>Dưới 1.200.000đ</option>
                     </select>
                 </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label for="sort">Sắp xếp</label>
+                    <select name="sort" id="sort" class="form-control">
+                        <option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Mới nhất</option>
+                        <option value="popular" <?= $sort === 'popular' ? 'selected' : '' ?>>Xem nhiều</option>
+                        <option value="price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Giá tăng dần</option>
+                        <option value="price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Giá giảm dần</option>
+                    </select>
+                </div>
                 <div style="display:flex;gap:10px;align-items:flex-end">
                     <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Lọc</button>
                     <a href="<?= SITE_URL ?>/homestays.php" class="btn btn-outline">Đặt lại</a>
@@ -110,7 +130,8 @@ $homestays = $stmt->fetchAll();
                 <?php endforeach; ?>
             </div>
 
-            <?= pagination($totalHomestays, $perPage, $currentPageNum, SITE_URL . '/homestays.php') ?>
+            <?php $query = buildQueryString(['page' => null]); ?>
+            <?= pagination($totalHomestays, $perPage, $currentPageNum, SITE_URL . '/homestays.php' . ($query !== '' ? ('?' . $query) : '')) ?>
         <?php else: ?>
             <div style="text-align:center;padding:50px 0">
                 <i class="fas fa-house" style="font-size:4rem;color:var(--text-muted)"></i>

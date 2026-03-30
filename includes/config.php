@@ -1,4 +1,5 @@
 <?php
+// config bootstrap
 
 
 // === CẤU HÌNH DATABASE ===
@@ -16,6 +17,13 @@ define('SITE_URL', 'http://localhost/vanho-tourism');
 define('ADMIN_URL', SITE_URL . '/admin');
 define('GOOGLE_MAPS_API_KEY', '');
 
+// === CẤU HÌNH CHUYỂN KHOẢN QR ===
+// Thay bằng thông tin tài khoản thực tế của admin/chủ homestay.
+define('PAYMENT_QR_BANK_BIN', '970422');
+define('PAYMENT_QR_ACCOUNT_NO', '19032003');
+define('PAYMENT_QR_ACCOUNT_NAME', 'VAN HO TOURISM');
+//aucc umre zwnk vrld
+
 // === ĐƯỜNG DẪN THƯ MỤC ===
 define('ROOT_PATH', dirname(__DIR__) . '/');
 define('INCLUDES_PATH', ROOT_PATH . 'includes/');
@@ -24,7 +32,7 @@ define('UPLOADS_URL', SITE_URL . '/uploads');
 
 // === CẤU HÌNH UPLOAD ===
 define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
-define('ALLOWED_EXTENSIONS', ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+define('ALLOWED_EXTENSIONS', ['jpg', 'jpeg', 'png', 'gif', 'webp', 'jfif']);
 define('ITEMS_PER_PAGE', 9);
 define('NEWS_PER_PAGE', 6);
 

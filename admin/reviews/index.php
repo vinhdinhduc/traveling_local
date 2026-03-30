@@ -3,29 +3,42 @@
 $adminTitle = 'Quản lý đánh giá';
 require_once dirname(__DIR__) . '/includes/header.php';
 
-if (isset($_GET['toggle'])) {
+$type = $_GET['type'] ?? 'place';
+if (!in_array($type, ['place', 'homestay'], true)) {
+    $type = 'place';
+}
+
+if ($type === 'place' && isset($_GET['toggle'])) {
     $toggleId = (int)$_GET['toggle'];
     $pdo->prepare('UPDATE reviews SET is_approved = 1 - is_approved WHERE id = ?')->execute([$toggleId]);
     setFlash('success', 'Đã cập nhật trạng thái đánh giá.');
-    header('Location: ' . ADMIN_URL . '/reviews/');
+    header('Location: ' . ADMIN_URL . '/reviews/?type=place');
     exit;
 }
 
 if (isset($_GET['delete'])) {
     $deleteId = (int)$_GET['delete'];
-    $pdo->prepare('DELETE FROM reviews WHERE id = ?')->execute([$deleteId]);
+    if ($type === 'homestay') {
+        $pdo->prepare('DELETE FROM homestay_reviews WHERE id = ?')->execute([$deleteId]);
+    } else {
+        $pdo->prepare('DELETE FROM reviews WHERE id = ?')->execute([$deleteId]);
+    }
     setFlash('success', 'Đã xóa đánh giá.');
-    header('Location: ' . ADMIN_URL . '/reviews/');
+    header('Location: ' . ADMIN_URL . '/reviews/?type=' . $type);
     exit;
 }
 
 $currentPageNum = getCurrentPage();
 $perPage = 15;
-$totalReviews = countRecords($pdo, 'reviews');
+$totalReviews = $type === 'homestay' ? countRecords($pdo, 'homestay_reviews') : countRecords($pdo, 'reviews');
 $totalPages = (int)ceil($totalReviews / $perPage);
 $offset = ($currentPageNum - 1) * $perPage;
 
-$stmt = $pdo->prepare('SELECT r.*, u.full_name, p.name AS place_name FROM reviews r JOIN users u ON u.id = r.user_id JOIN places p ON p.id = r.place_id ORDER BY r.created_at DESC LIMIT :limit OFFSET :offset');
+$query = $type === 'homestay'
+    ? 'SELECT r.*, u.full_name, h.name AS item_name, NULL AS is_approved FROM homestay_reviews r JOIN users u ON u.id = r.user_id JOIN homestays h ON h.id = r.homestay_id ORDER BY r.created_at DESC LIMIT :limit OFFSET :offset'
+    : 'SELECT r.*, u.full_name, p.name AS item_name, r.is_approved FROM reviews r JOIN users u ON u.id = r.user_id JOIN places p ON p.id = r.place_id ORDER BY r.created_at DESC LIMIT :limit OFFSET :offset';
+
+$stmt = $pdo->prepare($query);
 $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
@@ -36,12 +49,17 @@ $reviews = $stmt->fetchAll();
     <h1><i class="fas fa-star" style="color:var(--admin-secondary)"></i> Quản lý đánh giá</h1>
 </div>
 
+<div class="table-wrapper" style="margin-bottom:16px;padding:12px 16px;display:flex;gap:8px">
+    <a href="<?= ADMIN_URL ?>/reviews/?type=place" class="btn-admin <?= $type === 'place' ? 'btn-add' : 'btn-back' ?>">Đánh giá địa điểm</a>
+    <a href="<?= ADMIN_URL ?>/reviews/?type=homestay" class="btn-admin <?= $type === 'homestay' ? 'btn-add' : 'btn-back' ?>">Đánh giá homestay</a>
+</div>
+
 <div class="table-wrapper">
     <table class="admin-table">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Địa điểm</th>
+                <th><?= $type === 'homestay' ? 'Homestay' : 'Địa điểm' ?></th>
                 <th>Người đánh giá</th>
                 <th>Điểm</th>
                 <th>Nội dung</th>
@@ -54,21 +72,29 @@ $reviews = $stmt->fetchAll();
                 <?php foreach ($reviews as $review): ?>
                     <tr>
                         <td><?= $review['id'] ?></td>
-                        <td><?= sanitize($review['place_name']) ?></td>
+                        <td><?= sanitize($review['item_name']) ?></td>
                         <td><?= sanitize($review['full_name']) ?></td>
-                        <td><strong><?= (int)$review['rating'] ?>/5</strong></td>
+                        <td><span class="review-stars"><?= renderStars((int)$review['rating']) ?></span></td>
                         <td><?= sanitize(excerpt($review['content'] ?? '', 65)) ?></td>
                         <td>
-                            <?php if ((int)$review['is_approved'] === 1): ?>
-                                <span class="badge badge-success">Hiển thị</span>
+                            <?php if ($type === 'homestay'): ?>
+                                <span class="badge badge-success"><i class="fas fa-comment-dots"></i> Công khai</span>
                             <?php else: ?>
-                                <span class="badge badge-warning">Ẩn</span>
+                                <?php if ((int)$review['is_approved'] === 1): ?>
+                                    <span class="badge badge-success"><i class="fas fa-eye"></i> Hiển thị</span>
+                                <?php else: ?>
+                                    <span class="badge badge-warning"><i class="fas fa-eye-slash"></i> Ẩn</span>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </td>
                         <td>
                             <div class="action-btns">
-                                <a href="<?= ADMIN_URL ?>/reviews/?toggle=<?= $review['id'] ?>" class="btn-admin btn-edit" data-confirm="Đổi trạng thái đánh giá này?"><i class="fas fa-check"></i></a>
-                                <a href="<?= ADMIN_URL ?>/reviews/?delete=<?= $review['id'] ?>" class="btn-admin btn-delete" data-confirm="Bạn có chắc muốn xóa đánh giá này?"><i class="fas fa-trash"></i></a>
+                                <?php if ($type === 'place'): ?>
+                                    <a href="<?= ADMIN_URL ?>/reviews/?type=place&toggle=<?= $review['id'] ?>" class="btn-admin btn-edit" data-confirm="Đổi trạng thái đánh giá này?" title="Ẩn/Hiện">
+                                        <i class="<?= (int)$review['is_approved'] === 1 ? 'fas fa-eye-slash' : 'fas fa-eye' ?>"></i>
+                                    </a>
+                                <?php endif; ?>
+                                <a href="<?= ADMIN_URL ?>/reviews/?type=<?= $type ?>&delete=<?= $review['id'] ?>" class="btn-admin btn-delete" data-confirm="Bạn có chắc muốn xóa đánh giá này?"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>

@@ -3,7 +3,7 @@
 
 
 require_once dirname(__DIR__, 2) . '/includes/config.php';
-require_once dirname(__DIR__, 2) . '/includes/functions.php';
+require_once dirname(__DIR__, 2) . '/functions.php';
 requireLogin();
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -34,3 +34,4 @@ $stmtDel->execute([$id]);
 setFlash('success', 'Đã xóa bài viết "' . $news['title'] . '" thành công.');
 header('Location: ' . ADMIN_URL . '/news/');
 exit;
+

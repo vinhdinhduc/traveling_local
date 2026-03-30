@@ -2,7 +2,7 @@
 
 
 require_once dirname(dirname(__DIR__)) . '/includes/config.php';
-require_once dirname(dirname(__DIR__)) . '/includes/functions.php';
+require_once dirname(dirname(__DIR__)) . '/functions.php';
 
 // Kiểm tra đăng nhập
 requireLogin();

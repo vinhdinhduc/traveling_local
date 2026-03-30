@@ -4,18 +4,24 @@
         <div class="footer-grid">
             <!-- Cột 1: Giới thiệu -->
             <div class="footer-col">
-                <h3>Du lịch Vân Hồ</h3>
-                <p>Khám phá vẻ đẹp thiên nhiên hoang sơ và văn hóa đặc sắc của đồng bào các dân tộc tại xã Vân Hồ, tỉnh Sơn La.</p>
+                <h3><?= sanitize(getSetting($pdo, 'site_name', 'Du lịch Vân Hồ')) ?></h3>
+                <p><?= sanitize(getSetting($pdo, 'site_description', '')) ?></p>
                 <div class="social-links">
-                    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
+                    <?php if (!empty($socialSettings['facebook_url'])): ?>
+                        <a href="<?= sanitize($socialSettings['facebook_url']) ?>" target="_blank" rel="noopener" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (!empty($socialSettings['youtube_url'])): ?>
+                        <a href="<?= sanitize($socialSettings['youtube_url']) ?>" target="_blank" rel="noopener" aria-label="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (!empty($socialSettings['instagram_url'])): ?>
+                        <a href="<?= sanitize($socialSettings['instagram_url']) ?>" target="_blank" rel="noopener" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -38,22 +44,22 @@
                 <h3>Liên hệ</h3>
                 <div class="footer-contact-item">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>UBND xã Vân Hồ, tỉnh Sơn La</span>
+                    <span><?= sanitize($contactSettings['site_address'] ?? '') ?></span>
                 </div>
                 <div class="footer-contact-item">
                     <i class="fas fa-phone"></i>
-                    <span>0212 223 478</span>
+                    <span><?= sanitize($contactSettings['site_phone_2'] ?? $contactSettings['site_phone'] ?? '') ?></span>
                 </div>
                 <div class="footer-contact-item">
                     <i class="fas fa-envelope"></i>
-                    <span>dulich@vanho.sonla.gov.vn</span>
+                    <span><?= sanitize($contactSettings['site_email'] ?? '') ?></span>
                 </div>
             </div>
         </div>
 
         <!-- Copyright -->
         <div class="footer-bottom">
-            <p>&copy; 2026 Du lịch Vân Hồ - Sơn La. All rights reserved.</p>
+            <p><?= getSetting($pdo, 'copyright_text', '© 2026 Du lịch Vân Hồ. All rights reserved.') ?></p>
         </div>
     </div>
 </footer>

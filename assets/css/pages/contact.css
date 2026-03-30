@@ -1,2 +1,68 @@
-/* Page CSS: contact */
-
+/* Cải thiện trang liên hệ */
+.contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 40px;
+}
+.contact-info-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    height: 100%;
+}
+.contact-info-card h3 {
+    font-size: 1.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
+}
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.contact-icon {
+    width: 45px;
+    height: 45px;
+    background: rgba(46, 125, 50, 0.1);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+.contact-text h4 {
+    margin-bottom: 5px;
+    color: var(--text);
+}
+.contact-text p {
+    color: var(--text-light);
+    line-height: 1.5;
+}
+.contact-form-card {
+    background: #fff;
+    padding: 35px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+.map-container {
+    margin-top: 40px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    height: 400px;
+    box-shadow: var(--shadow);
+}
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+@media (max-width: 900px) {
+    .contact-wrapper { grid-template-columns: 1fr; }
+}

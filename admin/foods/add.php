@@ -2,7 +2,10 @@
 
 $adminTitle = 'Thêm món ăn';
 $adminScripts = ['https://cdn.ckeditor.com/4.22.1/full/ckeditor.js'];
-require_once dirname(__DIR__) . '/includes/header.php';
+
+require_once dirname(dirname(__DIR__)) . '/includes/config.php';
+require_once dirname(dirname(__DIR__)) . '/functions.php';
+requireLogin();
 
 $errors = [];
 
@@ -13,10 +16,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = trim($_POST['name'] ?? '');
         $shortDesc = trim($_POST['short_description'] ?? '');
         $description = $_POST['description'] ?? '';
+        $subtitle = trim($_POST['subtitle'] ?? '');
+        $origin = trim($_POST['origin'] ?? 'Vân Hồ, Sơn La');
+        $ethnicity = trim($_POST['ethnicity'] ?? 'Thái · Mường');
+        $spiceLevel = (int)($_POST['spice_level'] ?? 2);
+        $bestSeason = trim($_POST['best_season'] ?? '');
+        $ratingValue = (float)($_POST['rating_value'] ?? 5);
+        $ingredients = trim($_POST['ingredients'] ?? '');
+        $tasteTips = trim($_POST['taste_tips'] ?? '');
+        $whereToEat = trim($_POST['where_to_eat'] ?? '');
         $slug = createSlug($name);
 
         if ($name === '') {
             $errors[] = 'Tên món ăn không được để trống.';
+        }
+
+        if ($spiceLevel < 0 || $spiceLevel > 5) {
+            $errors[] = 'Độ cay phải nằm trong khoảng 0-5.';
+        }
+
+        if ($ratingValue < 0 || $ratingValue > 5) {
+            $errors[] = 'Điểm đánh giá phải nằm trong khoảng 0-5.';
         }
 
         $image = '';
@@ -29,8 +49,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($errors)) {
-            $stmt = $pdo->prepare('INSERT INTO foods (name, slug, short_description, description, image) VALUES (?, ?, ?, ?, ?)');
-            $stmt->execute([$name, $slug, $shortDesc, $description, $image]);
+            $stmt = $pdo->prepare('INSERT INTO foods (name, slug, short_description, description, image, subtitle, origin, ethnicity, spice_level, best_season, rating_value, ingredients, taste_tips, where_to_eat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt->execute([
+                $name,
+                $slug,
+                $shortDesc,
+                $description,
+                $image,
+                $subtitle,
+                $origin,
+                $ethnicity,
+                $spiceLevel,
+                $bestSeason,
+                $ratingValue,
+                $ingredients,
+                $tasteTips,
+                $whereToEat
+            ]);
 
             setFlash('success', 'Đã thêm món ăn thành công.');
             header('Location: ' . ADMIN_URL . '/foods/');
@@ -40,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $csrfToken = generateCsrfToken();
+require_once dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="content-header">
@@ -70,6 +106,51 @@ $csrfToken = generateCsrfToken();
         <div class="form-group">
             <label for="description">Mô tả chi tiết</label>
             <textarea name="description" id="description" class="form-control" rows="12"><?= isset($description) ? $description : '' ?></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="subtitle">Phụ đề thẻ thông tin</label>
+            <input type="text" name="subtitle" id="subtitle" class="form-control" value="<?= isset($subtitle) ? sanitize($subtitle) : 'Đặc sản Vân Hồ · Sơn La' ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="origin">Xuất xứ</label>
+            <input type="text" name="origin" id="origin" class="form-control" value="<?= isset($origin) ? sanitize($origin) : 'Vân Hồ, Sơn La' ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="ethnicity">Dân tộc</label>
+            <input type="text" name="ethnicity" id="ethnicity" class="form-control" value="<?= isset($ethnicity) ? sanitize($ethnicity) : 'Thái · Mường' ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="spice_level">Độ cay (0-5)</label>
+            <input type="number" name="spice_level" id="spice_level" class="form-control" min="0" max="5" step="1" value="<?= isset($spiceLevel) ? (int)$spiceLevel : 2 ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="best_season">Mùa ngon nhất</label>
+            <input type="text" name="best_season" id="best_season" class="form-control" value="<?= isset($bestSeason) ? sanitize($bestSeason) : 'Tháng 10 - 3' ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="rating_value">Điểm đánh giá (0-5)</label>
+            <input type="number" name="rating_value" id="rating_value" class="form-control" min="0" max="5" step="0.1" value="<?= isset($ratingValue) ? (float)$ratingValue : 5 ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="ingredients">Nguyên liệu đặc trưng (mỗi dòng 1 mục)</label>
+            <textarea name="ingredients" id="ingredients" class="form-control" rows="6"><?= isset($ingredients) ? sanitize($ingredients) : "Nguyên liệu tươi từ núi rừng Tây Bắc\nGia vị truyền thống của người Thái\nLá rừng đặc trưng vùng Vân Hồ\nRau sạch vùng cao không thuốc trừ sâu\nThịt gia súc nuôi thả tự nhiên\nHạt tiêu rừng Sơn La" ?></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="taste_tips">Mẹo thưởng thức (mỗi dòng 1 mục)</label>
+            <textarea name="taste_tips" id="taste_tips" class="form-control" rows="6"><?= isset($tasteTips) ? sanitize($tasteTips) : "Thưởng thức vào buổi sáng sớm khi sương mù còn phủ kín núi để cảm nhận trọn vị.\nKết hợp cùng rượu ngô Vân Hồ hoặc nước lá rừng để cân bằng vị đậm.\nĐặt tại nhà hàng hoặc homestay địa phương để có công thức truyền thống chuẩn vị.\nĐi chợ phiên cuối tuần để mua nguyên liệu tươi và trải nghiệm văn hóa bản địa." ?></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="where_to_eat">Thưởng thức ở đâu? (mỗi dòng theo dạng: Tên địa điểm|Vị trí)</label>
+            <textarea name="where_to_eat" id="where_to_eat" class="form-control" rows="4"><?= isset($whereToEat) ? sanitize($whereToEat) : "Chợ phiên Vân Hồ|T7 & CN\nNhà hàng Bản Mường|TT. Vân Hồ\nHomestay Pa Co|Bản Pa Co" ?></textarea>
         </div>
 
         <div class="form-group">

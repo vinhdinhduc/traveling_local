@@ -6,6 +6,7 @@ $pageTitle = 'Trang chủ';
 $pageDescription = 'Khám phá vẻ đẹp thiên nhiên hoang sơ và văn hóa đặc sắc tại xã Vân Hồ, huyện Vân Hồ, tỉnh Sơn La';
 
 require_once 'includes/header.php';
+require_once 'includes/settings.php';
 
 // Lấy 6 địa điểm mới nhất
 $stmtPlaces = $pdo->query("SELECT * FROM places ORDER BY created_at DESC LIMIT 6");
@@ -18,64 +19,32 @@ $newsList = $stmtNews->fetchAll();
 // Lấy ẩm thực nổi bật
 $stmtFoods = $pdo->query("SELECT * FROM foods ORDER BY created_at DESC LIMIT 3");
 $foods = $stmtFoods->fetchAll();
-
 // Lấy homestay nổi bật
 $stmtHomestays = $pdo->query("SELECT * FROM homestays ORDER BY created_at DESC LIMIT 3");
 $homestays = $stmtHomestays->fetchAll();
 ?>
 
-<!-- ===== HERO SLIDER ===== -->
+<!-- ===== HERO SLIDER (từ DB) ===== -->
+<?php $sliders = getSliders($pdo); ?>
 <section class="hero-section">
     <div class="swiper hero-slider">
         <div class="swiper-wrapper">
-            <!-- Slide 1 -->
-            <div class="swiper-slide">
-                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&h=600&fit=crop"
-                    alt="Cảnh đẹp Vân Hồ - Núi non hùng vĩ" loading="lazy">
-                <div class="hero-overlay">
-                    <div class="hero-content">
-                        <h1>Khám phá Vân Hồ</h1>
-                        <p>Thiên đường du lịch giữa đại ngàn Tây Bắc</p>
-                        <a href="<?= SITE_URL ?>/places.php" class="btn btn-accent">Khám phá ngay</a>
+            <?php foreach ($sliders as $slide): ?>
+                <div class="swiper-slide">
+                    <img src="<?= './uploads/sliders/' . sanitize($slide['image']) ?>" alt="<?= sanitize($slide['title']) ?>" >
+                    <div class="hero-overlay">
+                        <div class="hero-content">
+                            <h1><?= sanitize($slide['title']) ?></h1>
+                            <?php if (!empty($slide['subtitle'])): ?>
+                                <p><?= sanitize($slide['subtitle']) ?></p>
+                            <?php endif; ?>
+                            <?php if (!empty($slide['button_text']) && !empty($slide['button_url'])): ?>
+                                <a href="<?= SITE_URL . sanitize($slide['button_url']) ?>" class="btn btn-accent"><?= sanitize($slide['button_text']) ?></a>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- Slide 2 -->
-            <div class="swiper-slide">
-                <img src="./assets/images/img2.jpg"
-                    alt="Bản làng Vân Hồ" loading="lazy">
-                <div class="hero-overlay">
-                    <div class="hero-content">
-                        <h1>Bản làng yên bình</h1>
-                        <p>Trải nghiệm cuộc sống bình dị nơi bản làng người Mông</p>
-                        <a href="<?= SITE_URL ?>/places.php" class="btn btn-accent">Xem địa điểm</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Slide 3 -->
-            <div class="swiper-slide">
-                <img src="./assets/images/img1.jpg"
-                    alt="Thiên nhiên Vân Hồ" loading="lazy">
-                <div class="hero-overlay">
-                    <div class="hero-content">
-                        <h1>Thiên nhiên tươi đẹp</h1>
-                        <p>Hòa mình vào thiên nhiên hoang sơ, hùng vĩ</p>
-                        <a href="<?= SITE_URL ?>/contact.php" class="btn btn-accent">Liên hệ tư vấn</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Slide 4 -->
-            <div class="swiper-slide">
-                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1400&h=600&fit=crop"
-                    alt="Rừng núi Vân Hồ" loading="lazy">
-                <div class="hero-overlay">
-                    <div class="hero-content">
-                        <h1>Văn hóa đặc sắc</h1>
-                        <p>Khám phá nét văn hóa truyền thống độc đáo của đồng bào dân tộc</p>
-                        <a href="<?= SITE_URL ?>/news.php" class="btn btn-accent">Đọc thêm</a>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
         <div class="swiper-pagination"></div>
         <div class="swiper-button-next"></div>
@@ -164,21 +133,27 @@ $homestays = $stmtHomestays->fetchAll();
     </div>
 </section>
 
-<!-- ===== GIỚI THIỆU ===== -->
+<!-- ===== GIỚI THIỆU (từ DB) ===== -->
 <section class="section section-bg">
     <div class="container">
         <div class="intro-section fade-in">
             <div class="intro-text">
-                <h2>Khám phá Vân Hồ</h2>
-                <p>Vân Hồ là một xã thuộc huyện Vân Hồ, tỉnh Sơn La, nằm ở độ cao trung bình trên 1.000m so với mực nước biển. Nơi đây được thiên nhiên ưu đãi với khí hậu mát mẻ quanh năm, cảnh quan hùng vĩ và hệ sinh thái phong phú.</p>
-                <p>Đến với Vân Hồ, du khách sẽ được trải nghiệm cuộc sống bình dị tại các bản làng của đồng bào Mông, Dao, Thái - nơi lưu giữ những giá trị văn hóa truyền thống đặc sắc qua bao thế hệ.</p>
-                <p>Từ những cánh rừng thông xanh mướt, thác nước hùng vĩ đến những đồi chè bát ngát, mỗi góc nhìn tại Vân Hồ đều mang lại cảm xúc khó quên cho du khách.</p>
+                <h2><?= sanitize(getSetting($pdo, 'about_title', 'Khám phá Vân Hồ')) ?></h2>
+                <?php
+                $aboutContent = getSetting($pdo, 'about_content', '');
+                $aboutParagraphs = array_filter(explode("\n", $aboutContent));
+                foreach ($aboutParagraphs as $paragraph):
+                    $paragraph = trim($paragraph);
+                    if ($paragraph !== ''):
+                ?>
+                    <p><?= sanitize($paragraph) ?></p>
+                <?php endif; endforeach; ?>
                 <a href="<?= SITE_URL ?>/places.php" class="btn btn-primary" style="margin-top:10px">
                     <i class="fas fa-compass"></i> Khám phá địa điểm
                 </a>
             </div>
             <div class="intro-image">
-                <img src="./assets/images/img3.jpg"
+                <img src="<?= sanitize(getSetting($pdo, 'about_image', './assets/images/img3.jpg')) ?>"
                     alt="Cảnh đẹp Vân Hồ - Sơn La" loading="lazy">
             </div>
         </div>
@@ -224,7 +199,8 @@ $homestays = $stmtHomestays->fetchAll();
     </div>
 </section>
 
-<!-- ===== GALLERY SWIPER ===== -->
+<!-- ===== GALLERY SWIPER (từ DB) ===== -->
+<?php $galleryImages = getGalleryImages($pdo); ?>
 <section class="section section-bg gallery-section">
     <div class="container">
         <div class="section-title fade-in">
@@ -234,38 +210,11 @@ $homestays = $stmtHomestays->fetchAll();
 
         <div class="swiper gallery-swiper fade-in">
             <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <img src="./assets/images/img1.jpg"
-                        alt="Cảnh đẹp Vân Hồ 1" data-lightbox loading="lazy">
-                </div>
-                <div class="swiper-slide">
-                    <img src="./assets/images/img2.jpg"
-                        alt="Cảnh đẹp Vân Hồ 2" data-lightbox loading="lazy">
-                </div>
-                <div class="swiper-slide">
-                    <img src="./assets/images/img3.jpg"
-                        alt="Cảnh đẹp Vân Hồ 3" data-lightbox loading="lazy">
-                </div>
-                <div class="swiper-slide">
-                    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=500&h=350&fit=crop"
-                        alt="Cảnh đẹp Vân Hồ 4" data-lightbox loading="lazy">
-                </div>
-                <div class="swiper-slide">
-                    <img src="./assets/images/img5.png"
-                        alt="Cảnh đẹp Vân Hồ 5" data-lightbox loading="lazy">
-                </div>
-                <div class="swiper-slide">
-                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500&h=350&fit=crop"
-                        alt="Cảnh đẹp Vân Hồ 6" data-lightbox loading="lazy">
-                </div>
-                <div class="swiper-slide">
-                    <img src="./assets/images/img7.jfif"
-                        alt="Cảnh đẹp Vân Hồ 7" data-lightbox loading="lazy">
-                </div>
-                <div class="swiper-slide">
-                    <img src="./assets/images/img8.jpg"
-                        alt="Cảnh đẹp Vân Hồ 8" data-lightbox loading="lazy">
-                </div>
+                <?php foreach ($galleryImages as $gImg): ?>
+                    <div class="swiper-slide">
+                         <img src="<?= './uploads/gallery/' . sanitize($gImg['image']) ?>" alt="<?= sanitize($gImg['alt_text'] ?? 'Ảnh Vân Hồ') ?>" >
+                    </div>
+                <?php endforeach; ?>
             </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>

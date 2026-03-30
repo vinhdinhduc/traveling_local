@@ -1,2 +1,601 @@
-/* Page CSS: food-detail */
+/* =====================================================
+   food-detail.css — Trang chi tiết món ăn
+   Phong cách: Food editorial · Warm story-telling
+   ===================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,600&display=swap');
+
+:root {
+    --warm-cream:  #FFFBF4;
+    --warm-amber:  #FFF3E0;
+    --spice:       #E65100;
+    --spice-light: #FF6D00;
+    --spice-pale:  #FFF8F0;
+    --herb:        #2E7D32;
+    --herb-light:  #4CAF50;
+    --gold:        #FFA726;
+    --gold-dark:   #F57C00;
+    --ink:         #1A1209;
+    --ink-soft:    #3D2B1F;
+    --stone:       #8D7B6A;
+}
+
+/* ══ HERO ══════════════════════════════════════════ */
+.fdt-hero {
+    position: relative;
+    height: 560px;
+    overflow: hidden;
+    margin-top: 108px;
+}
+
+.fdt-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.05);
+    transition: transform 8s ease;
+}
+
+.fdt-hero:hover .fdt-hero__img {
+    transform: scale(1);
+}
+
+.fdt-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to right, rgba(26,18,9,0.90) 0%, rgba(26,18,9,0.60) 45%, rgba(26,18,9,0.20) 100%),
+        linear-gradient(to top, rgba(26,18,9,0.5) 0%, transparent 40%);
+}
+
+/* Decorative food texture */
+.fdt-hero__overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(230,81,0,0.08) 0%, transparent 60%);
+}
+
+.fdt-hero__body {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 52px;
+}
+
+.fdt-hero__bc {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 20px;
+}
+
+.fdt-hero__bc a { color: rgba(255,255,255,0.55); }
+.fdt-hero__bc a:hover { color: var(--gold); }
+.fdt-hero__bc .sep { opacity: 0.4; }
+
+.fdt-hero__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(90deg, var(--spice), var(--gold-dark));
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 99px;
+    margin-bottom: 16px;
+    width: fit-content;
+    box-shadow: 0 3px 12px rgba(230,81,0,0.45);
+}
+
+.fdt-hero__title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.18;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+    max-width: 640px;
+}
+
+.fdt-hero__meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    font-size: 0.86rem;
+}
+
+.fdt-hero__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: rgba(255,255,255,0.82);
+}
+
+.fdt-hero__meta-item i { color: var(--gold); font-size: 0.8rem; }
+
+/* ══ LAYOUT ══════════════════════════════════════════ */
+.fdt-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 40px;
+    padding: 56px 0 80px;
+    align-items: start;
+}
+
+/* ══ MAIN CONTENT ══════════════════════════════════ */
+
+/* Section title style */
+.fdt-section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    position: relative;
+}
+
+.fdt-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 48px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--spice), var(--gold));
+    border-radius: 99px;
+}
+
+.fdt-section-title .icon-wrap {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(230,81,0,0.12), rgba(255,167,38,0.12));
+    color: var(--spice);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+/* Story / Description */
+.fdt-story {
+    margin-bottom: 48px;
+}
+
+.fdt-story-text {
+    font-size: 1.02rem;
+    color: #444;
+    line-height: 1.9;
+}
+
+.fdt-story-text p {
+    margin-bottom: 18px;
+}
+
+.fdt-story-text p:first-child::first-letter {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--spice);
+    float: left;
+    line-height: 0.75;
+    margin: 8px 8px 0 0;
+}
+
+/* Pull quote styling */
+.fdt-story-text blockquote {
+    border-left: 4px solid var(--gold);
+    padding: 14px 20px;
+    margin: 24px 0;
+    background: var(--warm-amber);
+    border-radius: 0 10px 10px 0;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+}
+
+/* Ingredients */
+.fdt-ingredients {
+    margin-bottom: 48px;
+    background: var(--warm-cream);
+    border: 1px solid rgba(230,81,0,0.12);
+    border-radius: 16px;
+    padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.fdt-ingredients::before {
+    content: '🌿';
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    font-size: 6rem;
+    opacity: 0.06;
+    transform: rotate(20deg);
+}
+
+.fdt-ing-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 24px;
+}
+
+.fdt-ing-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px dashed rgba(230,81,0,0.15);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+}
+
+.fdt-ing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--spice);
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+/* Tips */
+.fdt-tips {
+    margin-bottom: 48px;
+}
+
+.fdt-tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fdt-tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 12px;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.fdt-tip-item:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    border-color: rgba(230,81,0,0.2);
+}
+
+.fdt-tip-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--spice), var(--gold-dark));
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(230,81,0,0.3);
+}
+
+.fdt-tip-text {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    padding-top: 5px;
+}
+
+/* Back button */
+.fdt-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: var(--warm-amber);
+    border: 1.5px solid rgba(230,81,0,0.25);
+    border-radius: 10px;
+    color: var(--spice);
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: all 0.25s;
+}
+
+.fdt-back-btn:hover {
+    background: var(--spice);
+    border-color: var(--spice);
+    color: #fff;
+    transform: translateX(-3px);
+}
+
+/* ══ SIDEBAR ══════════════════════════════════════════ */
+.fdt-sidebar {
+    position: sticky;
+    top: calc(108px + 24px);
+}
+
+/* Info card */
+.fdt-info-card {
+    background: #fff;
+    border: 1px solid rgba(230,81,0,0.12);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(230,81,0,0.08);
+    margin-bottom: 20px;
+}
+
+.fdt-info-card-top {
+    background: linear-gradient(135deg, #BF360C, var(--spice), var(--spice-light));
+    padding: 22px 22px 18px;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.fdt-info-card-top::before {
+    content: '🍲';
+    position: absolute;
+    right: -8px;
+    top: -4px;
+    font-size: 4rem;
+    opacity: 0.15;
+}
+
+.fdt-info-card-icon {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+}
+
+.fdt-info-card-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 4px;
+}
+
+.fdt-info-card-sub {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.06em;
+}
+
+.fdt-info-rows {
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fdt-info-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.87rem;
+}
+
+.fdt-info-row-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--stone);
+    flex-shrink: 0;
+}
+
+.fdt-info-row-label i {
+    color: var(--spice);
+    width: 14px;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.fdt-info-row-value {
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-align: right;
+    font-size: 0.85rem;
+}
+
+/* Share card */
+.fdt-share-card {
+    background: var(--warm-cream);
+    border: 1px solid rgba(230,81,0,0.12);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.fdt-share-title {
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.fdt-share-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.fdt-share-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.fdt-share-fb {
+    background: #1877F2;
+    color: #fff;
+}
+
+.fdt-share-fb:hover {
+    background: #0d6efd;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.fdt-share-zl {
+    background: #006AF5;
+    color: #fff;
+}
+
+.fdt-share-zl:hover {
+    background: #0059d6;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.fdt-share-lk {
+    background: #fff;
+    color: var(--stone);
+    border: 1px solid var(--border);
+}
+
+.fdt-share-lk:hover {
+    background: var(--spice-pale);
+    border-color: var(--spice);
+    color: var(--spice);
+    transform: translateY(-1px);
+}
+
+/* Where to eat */
+.fdt-where-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.fdt-where-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fdt-where-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 0.87rem;
+}
+
+.fdt-where-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.fdt-where-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--herb);
+    flex-shrink: 0;
+}
+
+.fdt-where-name {
+    color: var(--ink-soft);
+    font-weight: 500;
+}
+
+.fdt-where-loc {
+    font-size: 0.75rem;
+    color: var(--stone);
+    margin-left: auto;
+}
+
+/* ══ RESPONSIVE ═══════════════════════════════════════ */
+@media (max-width: 1024px) {
+    .fdt-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .fdt-sidebar {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .fdt-info-card { grid-column: 1 / -1; }
+}
+
+@media (max-width: 768px) {
+    .fdt-hero {
+        height: 400px;
+        margin-top: 72px;
+    }
+
+    .fdt-layout {
+        padding: 32px 0 60px;
+        gap: 24px;
+    }
+
+    .fdt-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .fdt-ingredients {
+        padding: 22px 20px;
+    }
+
+    .fdt-ing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fdt-story-text p:first-child::first-letter {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .fdt-hero {
+        height: 300px;
+    }
+
+    .fdt-hero__title {
+        font-size: 1.7rem;
+    }
+}

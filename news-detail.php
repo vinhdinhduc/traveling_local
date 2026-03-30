@@ -3,7 +3,7 @@
 
 
 require_once 'includes/config.php';
-require_once 'includes/functions.php';
+require_once __DIR__ . '/functions.php';
 
 // Lấy ID bài viết
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -118,3 +118,4 @@ require_once 'includes/header.php';
 </section>
 
 <?php require_once 'includes/footer.php'; ?>
+

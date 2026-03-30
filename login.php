@@ -1,7 +1,12 @@
 <?php
 
-require_once 'includes/config.php';
-require_once 'includes/functions.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/functions.php';
+
+if (isLoggedIn()) {
+    header('Location: ' . ADMIN_URL . '/index.php');
+    exit;
+}
 
 if (isUserLoggedIn()) {
     header('Location: ' . SITE_URL);
@@ -27,16 +32,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($errors)) {
-            $stmt = $pdo->prepare('SELECT id, full_name, password, is_active FROM users WHERE email = ? LIMIT 1');
+            $stmt = $pdo->prepare('SELECT id, full_name, email, password, is_active, role FROM users WHERE email = ? LIMIT 1');
             $stmt->execute([$email]);
             $user = $stmt->fetch();
 
             if ($user && (int)$user['is_active'] === 1 && password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = (int)$user['id'];
                 $_SESSION['user_name'] = $user['full_name'];
+
+                if (($user['role'] ?? 'user') === 'admin') {
+                    $_SESSION['admin_id'] = (int)$user['id'];
+                    $_SESSION['admin_username'] = $user['full_name'];
+                } else {
+                    unset($_SESSION['admin_id'], $_SESSION['admin_username']);
+                }
+
                 session_regenerate_id(true);
 
-                if ($redirect !== '' && str_starts_with($redirect, SITE_URL)) {
+                if (($user['role'] ?? 'user') === 'admin') {
+                    if ($redirect !== '' && str_starts_with($redirect, SITE_URL)) {
+                        header('Location: ' . $redirect);
+                    } else {
+                        header('Location: ' . ADMIN_URL . '/index.php');
+                    }
+                    exit;
+                }
+
+                if ($redirect !== '' && str_starts_with($redirect, SITE_URL) && !str_starts_with($redirect, ADMIN_URL)) {
                     header('Location: ' . $redirect);
                 } else {
                     header('Location: ' . SITE_URL);
@@ -50,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = 'Đăng nhập';
-require_once 'includes/header.php';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="breadcrumb">
@@ -75,7 +97,7 @@ require_once 'includes/header.php';
 
         <div class="form-card-public">
             <h1>Đăng nhập tài khoản</h1>
-            <p>Đăng nhập để đặt homestay và gửi đánh giá hành trình.</p>
+            <p>Đăng nhập để đặt homestay, gửi đánh giá hoặc quản trị hệ thống theo quyền tài khoản.</p>
 
             <form method="POST" action="">
                 <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
@@ -88,6 +110,9 @@ require_once 'includes/header.php';
                 <div class="form-group">
                     <label for="password">Mật khẩu</label>
                     <input type="password" id="password" name="password" class="form-control" required>
+                    <div style="margin-top:8px;text-align:right">
+                        <a href="<?= SITE_URL ?>/forgot-password.php" style="font-size:.9rem">Quên mật khẩu?</a>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Đăng nhập</button>
             </form>
@@ -97,4 +122,4 @@ require_once 'includes/header.php';
     </div>
 </section>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>

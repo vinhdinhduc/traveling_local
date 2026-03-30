@@ -1,7 +1,7 @@
 <?php
 
 require_once 'includes/config.php';
-require_once 'includes/functions.php';
+require_once __DIR__ . '/functions.php';
 
 if (isUserLoggedIn()) {
     header('Location: ' . SITE_URL);
@@ -50,6 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = (int)$pdo->lastInsertId();
             $_SESSION['user_name'] = $fullName;
             session_regenerate_id(true);
+
+            // Gửi email xác nhận đăng ký
+            sendTemplateEmail($pdo, 'registration_confirm', $email, [
+                'full_name' => $fullName,
+            ]);
 
             setFlash('success', 'Đăng ký thành công. Chào mừng bạn đến với Du lịch Vân Hồ!');
             header('Location: ' . SITE_URL);
@@ -120,3 +125,4 @@ require_once 'includes/header.php';
 </section>
 
 <?php require_once 'includes/footer.php'; ?>
+

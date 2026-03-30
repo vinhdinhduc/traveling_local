@@ -1,7 +1,7 @@
 <?php
 
 require_once 'includes/config.php';
-require_once 'includes/functions.php';
+require_once __DIR__ . '/functions.php';
 
 // Lấy ID địa điểm
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -30,6 +30,23 @@ $galleryImages = $stmtImages->fetchAll();
 
 $currentUser = getCurrentUser($pdo);
 $reviewErrors = [];
+$wishlisted = false;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_wishlist'])) {
+    if (!isUserLoggedIn()) {
+        header('Location: ' . SITE_URL . '/login.php?redirect=' . urlencode(SITE_URL . '/place-detail.php?id=' . $id));
+        exit;
+    }
+
+    if (!isset($_POST['csrf_token']) || !verifyCsrfToken($_POST['csrf_token'])) {
+        setFlash('error', 'Phiên làm việc không hợp lệ.');
+    } else {
+        $added = toggleWishlist($pdo, (int)$_SESSION['user_id'], $id);
+        setFlash('success', $added ? 'Đã thêm địa điểm vào yêu thích.' : 'Đã xóa địa điểm khỏi yêu thích.');
+    }
+    header('Location: ' . SITE_URL . '/place-detail.php?id=' . $id);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     if (!isUserLoggedIn()) {
@@ -65,6 +82,10 @@ $stmtReviews = $pdo->prepare("SELECT r.*, u.full_name FROM reviews r JOIN users 
 $stmtReviews->execute([$id]);
 $reviews = $stmtReviews->fetchAll();
 
+if ($currentUser) {
+    $wishlisted = isPlaceWishlisted($pdo, (int)$currentUser['id'], $id);
+}
+
 // SEO
 $pageTitle = $place['name'];
 $pageDescription = excerpt(strip_tags($place['short_description'] ?? $place['description'] ?? ''), 160);
@@ -89,6 +110,7 @@ require_once 'includes/header.php';
 <!-- Chi tiết địa điểm -->
 <section class="detail-section">
     <div class="container">
+        <?= getFlash() ?>
         <!-- Header -->
         <div class="detail-header fade-in">
             <h1><?= sanitize($place['name']) ?></h1>
@@ -102,6 +124,15 @@ require_once 'includes/header.php';
             <div class="rating-summary">
                 <strong><?= number_format((float)($reviewStats['avg_rating'] ?? 0), 1) ?>/5</strong>
                 <span><?= (int)($reviewStats['total'] ?? 0) ?> đánh giá</span>
+            </div>
+            <div style="margin-top:12px">
+                <form method="POST" action="">
+                    <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
+                    <button type="submit" name="toggle_wishlist" class="btn btn-outline">
+                        <i class="<?= $wishlisted ? 'fas' : 'far' ?> fa-heart" style="color:<?= $wishlisted ? '#ef4444' : '#64748b' ?>"></i>
+                        <?= $wishlisted ? 'Bỏ yêu thích' : 'Thêm yêu thích' ?>
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -202,7 +233,7 @@ require_once 'includes/header.php';
                         <div class="review-item">
                             <div class="review-head">
                                 <strong><?= sanitize($review['full_name']) ?></strong>
-                                <span class="review-stars"><?= str_repeat('★', (int)$review['rating']) . str_repeat('☆', 5 - (int)$review['rating']) ?></span>
+                                <span class="review-stars"><?= renderStars((int)$review['rating']) ?></span>
                             </div>
                             <div class="review-time"><?= formatDateTime($review['created_at']) ?></div>
                             <p><?= nl2br(sanitize($review['content'] ?? '')) ?></p>
@@ -217,3 +248,4 @@ require_once 'includes/header.php';
 </section>
 
 <?php require_once 'includes/footer.php'; ?>
+

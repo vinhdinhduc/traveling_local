@@ -6,6 +6,25 @@ $pageDescription = 'Khám phá các địa điểm du lịch hấp dẫn tại x
 
 require_once 'includes/header.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_wishlist'])) {
+    if (!isUserLoggedIn()) {
+        header('Location: ' . SITE_URL . '/login.php?redirect=' . urlencode(SITE_URL . '/places.php?' . buildQueryString()));
+        exit;
+    }
+
+    if (!isset($_POST['csrf_token']) || !verifyCsrfToken($_POST['csrf_token'])) {
+        setFlash('error', 'Phiên làm việc không hợp lệ.');
+    } else {
+        $wishPlaceId = (int)($_POST['place_id'] ?? 0);
+        if ($wishPlaceId > 0) {
+            $added = toggleWishlist($pdo, (int)$_SESSION['user_id'], $wishPlaceId);
+            setFlash('success', $added ? 'Đã thêm vào danh sách yêu thích.' : 'Đã xóa khỏi danh sách yêu thích.');
+        }
+    }
+    header('Location: ' . SITE_URL . '/places.php?' . buildQueryString());
+    exit;
+}
+
 // Phân trang
 $currentPageNum = getCurrentPage();
 $perPage = ITEMS_PER_PAGE;
@@ -42,6 +61,20 @@ $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $places = $stmt->fetchAll();
+
+$wishlistMap = [];
+if (isUserLoggedIn() && count($places) > 0) {
+    $placeIds = array_map(static fn(array $p): int => (int)$p['id'], $places);
+    $placeIds = array_values(array_unique($placeIds));
+    if (count($placeIds) > 0) {
+        $placeIdsSql = implode(',', array_fill(0, count($placeIds), '?'));
+        $stmtWishlist = $pdo->prepare('SELECT place_id FROM wishlists WHERE user_id = ? AND place_id IN (' . $placeIdsSql . ')');
+        $stmtWishlist->execute(array_merge([(int)$_SESSION['user_id']], $placeIds));
+        foreach ($stmtWishlist->fetchAll() as $row) {
+            $wishlistMap[(int)$row['place_id']] = true;
+        }
+    }
+}
 ?>
 
 <!-- Breadcrumb -->
@@ -90,11 +123,20 @@ $places = $stmt->fetchAll();
 <!-- Danh sách địa điểm -->
 <section class="section" style="padding-top:20px">
     <div class="container">
+        <?= getFlash() ?>
         <?php if (count($places) > 0): ?>
             <div class="cards-grid">
                 <?php foreach ($places as $place): ?>
                     <div class="card fade-in">
                         <div class="card-image">
+                            <form method="POST" action="" style="position:absolute;top:10px;right:10px;z-index:3">
+                                <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
+                                <input type="hidden" name="place_id" value="<?= (int)$place['id'] ?>">
+                                <button type="submit" name="toggle_wishlist" class="btn" style="padding:7px 10px;background:#fff;border:1px solid #e2e8f0">
+                                    <?php $liked = !empty($wishlistMap[(int)$place['id']]); ?>
+                                    <i class="<?= $liked ? 'fas' : 'far' ?> fa-heart" style="color:<?= $liked ? '#ef4444' : '#64748b' ?>"></i>
+                                </button>
+                            </form>
                             <?php if (!empty($place['image'])): ?>
                                 <img src="<?= getImageUrl($place['image'], 'places') ?>"
                                     alt="<?= sanitize($place['name']) ?>" loading="lazy">

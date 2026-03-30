@@ -48,6 +48,29 @@
         </a>
 
         <div class="nav-divider"></div>
+        <div class="nav-heading" style="padding: 10px 20px; font-size: 0.75rem; color: #888; text-transform: uppercase; font-weight: bold;">Hệ thống</div>
+
+        <a href="<?= ADMIN_URL ?>/sliders/" class="<?= $adminDir === 'sliders' ? 'active' : '' ?>">
+            <i class="fas fa-images"></i> Quản lý Slider
+        </a>
+
+        <a href="<?= ADMIN_URL ?>/gallery/" class="<?= $adminDir === 'gallery' ? 'active' : '' ?>">
+            <i class="far fa-images"></i> Quản lý Gallery
+        </a>
+
+        <a href="<?= ADMIN_URL ?>/amenities/" class="<?= $adminDir === 'amenities' ? 'active' : '' ?>">
+            <i class="fas fa-concierge-bell"></i> Quản lý Tiện nghi
+        </a>
+
+        <a href="<?= ADMIN_URL ?>/email-templates/" class="<?= $adminDir === 'email-templates' ? 'active' : '' ?>">
+            <i class="fas fa-envelope-open-text"></i> Email Templates
+        </a>
+
+        <a href="<?= ADMIN_URL ?>/settings/" class="<?= $adminDir === 'settings' ? 'active' : '' ?>">
+            <i class="fas fa-cog"></i> Cài đặt chung
+        </a>
+
+        <div class="nav-divider"></div>
 
         <a href="<?= SITE_URL ?>" target="_blank">
             <i class="fas fa-external-link-alt"></i> Xem website
