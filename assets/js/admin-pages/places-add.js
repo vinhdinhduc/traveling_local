@@ -1,4 +1,3 @@
-// Admin page JS: places-add
 document.addEventListener("DOMContentLoaded", function () {
   if (typeof CKEDITOR !== "undefined") {
     CKEDITOR.replace("description", {

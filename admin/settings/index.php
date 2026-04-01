@@ -1,5 +1,5 @@
 <?php
-// admin/settings/index.php
+
 
 require_once '../../includes/config.php';
 require_once dirname(__DIR__, 2) . '/functions.php';
@@ -69,7 +69,7 @@ require_once '../includes/header.php';
     <!-- Tabs -->
     <div class="settings-tabs" style="margin-bottom: 20px; border-bottom: 2px solid #e8ecf4; display:flex; gap: 15px;">
         <?php foreach ($tabs as $key => $label): ?>
-            <a href="index.php?tab=<?= $key ?>" 
+            <a href="index.php?tab=<?= $key ?>"
                 style="padding: 10px 16px; font-weight: 600; color: <?= $key === $activeTab ? 'var(--primary)' : '#666' ?>; border-bottom: <?= $key === $activeTab ? '3px solid var(--primary)' : '3px solid transparent' ?>; text-decoration: none; margin-bottom: -2px;">
                 <?= $label ?>
             </a>
@@ -81,38 +81,37 @@ require_once '../includes/header.php';
             <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
             <input type="hidden" name="tab" value="<?= $activeTab ?>">
 
-                    <?php foreach ($settingsList as $setting): ?>
-                        <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="font-weight: 600; display:block; margin-bottom: 6px;">
-                                <?= sanitize($setting['description'] ?: $setting['setting_key']) ?>
-                            </label>
-                            
-                            <?php if ($setting['setting_key'] === 'about_content' || $setting['setting_key'] === 'site_working_hours_detail'): ?>
-                                <textarea name="settings[<?= $setting['setting_key'] ?>]" class="form-control" rows="5" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;"><?= sanitize($setting['setting_value']) ?></textarea>
-                            <?php elseif ($setting['setting_key'] === 'smtp_encryption'): ?>
-                                <select name="settings[<?= $setting['setting_key'] ?>]" class="form-control" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
-                                    <option value="tls" <?= $setting['setting_value'] === 'tls' ? 'selected' : '' ?>>TLS (Khuyên dùng)</option>
-                                    <option value="ssl" <?= $setting['setting_value'] === 'ssl' ? 'selected' : '' ?>>SSL</option>
-                                    <option value="none" <?= $setting['setting_value'] === 'none' ? 'selected' : '' ?>>Không mã hóa</option>
-                                </select>
-                            <?php elseif (strpos($setting['setting_key'], 'password') !== false): ?>
-                                <input type="password" name="settings[<?= $setting['setting_key'] ?>]" class="form-control" value="<?= sanitize($setting['setting_value']) ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
-                            <?php else: ?>
-                                <input type="text" name="settings[<?= $setting['setting_key'] ?>]" class="form-control" value="<?= sanitize($setting['setting_value']) ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
-                            <?php endif; ?>
-                        </div>
-                    <?php endforeach; ?>
+            <?php foreach ($settingsList as $setting): ?>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: 600; display:block; margin-bottom: 6px;">
+                        <?= sanitize($setting['description'] ?: $setting['setting_key']) ?>
+                    </label>
 
-                <?php if (empty($settingsList)): ?>
-                    <p style="color: #666;">Chưa có cài đặt nào trong nhóm này.</p>
-                <?php else: ?>
-                    <div class="form-actions">
-                        <button type="submit" class="btn-admin btn-add"><i class="fas fa-save"></i> Lưu cài đặt</button>
-                    </div>
-                <?php endif; ?>
-            </form>
-        </div>
+                    <?php if ($setting['setting_key'] === 'about_content' || $setting['setting_key'] === 'site_working_hours_detail'): ?>
+                        <textarea name="settings[<?= $setting['setting_key'] ?>]" class="form-control" rows="5" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;"><?= sanitize($setting['setting_value']) ?></textarea>
+                    <?php elseif ($setting['setting_key'] === 'smtp_encryption'): ?>
+                        <select name="settings[<?= $setting['setting_key'] ?>]" class="form-control" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                            <option value="tls" <?= $setting['setting_value'] === 'tls' ? 'selected' : '' ?>>TLS (Khuyên dùng)</option>
+                            <option value="ssl" <?= $setting['setting_value'] === 'ssl' ? 'selected' : '' ?>>SSL</option>
+                            <option value="none" <?= $setting['setting_value'] === 'none' ? 'selected' : '' ?>>Không mã hóa</option>
+                        </select>
+                    <?php elseif (strpos($setting['setting_key'], 'password') !== false): ?>
+                        <input type="password" name="settings[<?= $setting['setting_key'] ?>]" class="form-control" value="<?= sanitize($setting['setting_value']) ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                    <?php else: ?>
+                        <input type="text" name="settings[<?= $setting['setting_key'] ?>]" class="form-control" value="<?= sanitize($setting['setting_value']) ?>" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+
+            <?php if (empty($settingsList)): ?>
+                <p style="color: #666;">Chưa có cài đặt nào trong nhóm này.</p>
+            <?php else: ?>
+                <div class="form-actions">
+                    <button type="submit" class="btn-admin btn-add"><i class="fas fa-save"></i> Lưu cài đặt</button>
+                </div>
+            <?php endif; ?>
+        </form>
     </div>
+</div>
 
 <?php require_once '../includes/footer.php'; ?>
-

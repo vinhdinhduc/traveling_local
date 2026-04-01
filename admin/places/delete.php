@@ -1,9 +1,5 @@
 <?php
 
-/**
- * ADMIN - XÓA ĐỊA ĐIỂM
- * Xóa ảnh + record trong database
- */
 
 require_once dirname(__DIR__, 2) . '/includes/config.php';
 require_once dirname(__DIR__, 2) . '/functions.php';
@@ -46,4 +42,3 @@ $stmtDel->execute([$id]);
 setFlash('success', 'Đã xóa địa điểm "' . $place['name'] . '" thành công.');
 header('Location: ' . ADMIN_URL . '/places/');
 exit;
-

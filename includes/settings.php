@@ -1,16 +1,8 @@
 <?php
 
-/**
- * includes/settings.php
- *
- * Hàm tiện ích đọc cấu hình website từ bảng site_settings,
- * slider, gallery, tiện nghi homestay.
- * Cache trong static variable để tránh query lặp trong 1 request.
- */
 
-/**
- * Lấy 1 giá trị setting theo key.
- */
+
+
 function getSetting(PDO $pdo, string $key, string $default = ''): string
 {
     static $cache = [];

@@ -1,15 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // === LOADING ANIMATION ===
   const loader = document.querySelector(".page-loader");
   if (loader) {
     window.addEventListener("load", function () {
       setTimeout(() => loader.classList.add("hidden"), 500);
     });
-    // Fallback: ẩn loader sau 3 giây
     setTimeout(() => loader.classList.add("hidden"), 3000);
   }
 
-  // === HEADER SCROLL EFFECT ===
   const header = document.querySelector(".header");
   if (header) {
     window.addEventListener("scroll", function () {
@@ -21,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // === HAMBURGER MENU (Mobile) ===
   const hamburger = document.querySelector(".hamburger");
   const navMenu = document.querySelector(".nav-menu");
   const overlay = document.querySelector(".mobile-overlay");
@@ -56,7 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // === HERO SLIDER (Swiper) ===
   if (document.querySelector(".hero-slider")) {
     new Swiper(".hero-slider", {
       effect: "fade",
@@ -75,7 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // === GALLERY SLIDER (Trang chủ) ===
   if (document.querySelector(".gallery-swiper")) {
     new Swiper(".gallery-swiper", {
       slidesPerView: 1,
@@ -93,7 +87,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // === DETAIL GALLERY SLIDER ===
   if (document.querySelector(".detail-gallery-swiper")) {
     new Swiper(".detail-gallery-swiper", {
       slidesPerView: 1,
@@ -114,11 +107,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // === LIGHTBOX ===
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightbox-img");
 
-  // Mở lightbox khi click ảnh gallery
   document.querySelectorAll("[data-lightbox]").forEach(function (el) {
     el.addEventListener("click", function () {
       const src = this.getAttribute("data-lightbox") || this.src;

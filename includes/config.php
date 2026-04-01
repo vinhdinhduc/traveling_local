@@ -1,5 +1,5 @@
 <?php
-// config bootstrap
+
 
 
 // === CẤU HÌNH DATABASE ===

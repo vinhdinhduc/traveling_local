@@ -1,9 +1,6 @@
 <?php
 
-/**
- * ADMIN - THÊM ĐỊA ĐIỂM MỚI
- * Upload ảnh chính + gallery, lưu database
- */
+
 
 $adminTitle = 'Thêm địa điểm';
 $adminScripts = ['https://cdn.ckeditor.com/4.22.1/full/ckeditor.js'];

@@ -1,6 +1,6 @@
 <?php
 
-//Cấu hinh email cho hệ thống
+
 return [
     // Phương thức email: 'mail', 'smtp', 'sendgrid', 'mailgun'
     'method' => 'smtp',

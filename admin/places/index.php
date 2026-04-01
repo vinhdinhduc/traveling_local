@@ -1,9 +1,5 @@
 <?php
 
-/**
- * ADMIN - DANH SÁCH ĐỊA ĐIỂM
- * Hiển thị, phân trang, liên kết thêm/sửa/xóa
- */
 
 $adminTitle = 'Quản lý địa điểm';
 require_once dirname(__DIR__) . '/includes/header.php';

@@ -515,4 +515,3 @@ echo '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/profile-style.css
 </div><!-- /.profile-page -->
 
 <?php require_once 'includes/footer.php'; ?>
-
