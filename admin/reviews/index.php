@@ -1,7 +1,9 @@
 <?php
 
 $adminTitle = 'Quản lý đánh giá';
-require_once dirname(__DIR__) . '/includes/header.php';
+require_once dirname(dirname(__DIR__)) . '/includes/config.php';
+require_once dirname(dirname(__DIR__)) . '/functions.php';
+requireLogin();
 
 $type = $_GET['type'] ?? 'place';
 if (!in_array($type, ['place', 'homestay'], true)) {
@@ -43,6 +45,8 @@ $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $reviews = $stmt->fetchAll();
+
+require_once dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="content-header">

@@ -1,7 +1,9 @@
 <?php
 
 $adminTitle = 'Quản lý đặt phòng';
-require_once dirname(__DIR__) . '/includes/header.php';
+require_once dirname(dirname(__DIR__)) . '/includes/config.php';
+require_once dirname(dirname(__DIR__)) . '/functions.php';
+requireLogin();
 
 releaseExpiredPendingBookings($pdo);
 
@@ -86,6 +88,8 @@ $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $bookings = $stmt->fetchAll();
+
+require_once dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="content-header">
@@ -131,7 +135,7 @@ $bookings = $stmt->fetchAll();
             <?php if (count($bookings) > 0): ?>
                 <?php foreach ($bookings as $booking): ?>
                     <tr>
-                        <td><?= $booking['id'] ?></td>
+                        <td><?= (int)$booking['id'] ?></td>
                         <td><?= sanitize($booking['homestay_name']) ?></td>
                         <td>
                             <strong><?= sanitize($booking['full_name']) ?></strong><br>

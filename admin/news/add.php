@@ -3,7 +3,9 @@
 
 
 $adminTitle = 'Thêm bài viết';
-require_once dirname(__DIR__) . '/includes/header.php';
+require_once dirname(dirname(__DIR__)) . '/includes/config.php';
+require_once dirname(dirname(__DIR__)) . '/functions.php';
+requireLogin();
 
 $errors = [];
 
@@ -42,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $csrfToken = generateCsrfToken();
+
+require_once dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="content-header">

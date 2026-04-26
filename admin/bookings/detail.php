@@ -127,11 +127,27 @@ require_once dirname(__DIR__) . '/includes/header.php';
                 </tr>
                 <tr>
                     <th>Trạng thái booking</th>
-                    <td><?= sanitize($booking['status']) ?></td>
+                    <td>
+                        <?php if ($booking['status'] === 'confirmed'): ?>
+                            <span class="badge badge-success">Đã xác nhận</span>
+                        <?php elseif ($booking['status'] === 'cancelled'): ?>
+                            <span class="badge badge-danger">Đã hủy</span>
+                        <?php else: ?>
+                            <span class="badge badge-warning">Chờ xử lý</span>
+                        <?php endif; ?>
+                    </td>
                 </tr>
                 <tr>
                     <th>Trạng thái thanh toán</th>
-                    <td><?= sanitize($booking['payment_status']) ?></td>
+                    <td>
+                        <?php if ($booking['payment_status'] === 'paid'): ?>
+                            <span class="badge badge-success">Đã thanh toán</span>
+                        <?php elseif ($booking['payment_status'] === 'refunded'): ?>
+                            <span class="badge badge-danger">Đã hoàn tiền</span>
+                        <?php else: ?>
+                            <span class="badge badge-warning">Chưa thanh toán</span>
+                        <?php endif; ?>
+                    </td>
                 </tr>
                 <tr>
                     <th>Giữ chỗ đến</th>

@@ -4,7 +4,8 @@
 $pageTitle = 'Địa điểm du lịch';
 $pageDescription = 'Khám phá các địa điểm du lịch hấp dẫn tại xã Vân Hồ, huyện Vân Hồ, tỉnh Sơn La';
 
-require_once 'includes/header.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_wishlist'])) {
     if (!isUserLoggedIn()) {
@@ -75,6 +76,8 @@ if (isUserLoggedIn() && count($places) > 0) {
         }
     }
 }
+
+require_once 'includes/header.php';
 ?>
 
 <!-- Breadcrumb -->

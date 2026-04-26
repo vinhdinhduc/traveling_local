@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = 'Email không hợp lệ.';
         }
 
-        // Basic throttle by session to reduce repeated requests.
         $now = time();
         $lastReq = (int)($_SESSION['forgot_password_last_request'] ?? 0);
         if ($lastReq > 0 && ($now - $lastReq) < 30) {
@@ -57,33 +56,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $sent = sendTemplateEmail($pdo, 'password_reset', $user['email'], $vars);
                 if (!$sent) {
-                    $subject = 'Yeu cau dat lai mat khau - ' . SITE_NAME;
-                    $htmlBody = '<p>Xin chao ' . sanitize($user['full_name']) . ',</p>'
-                        . '<p>Chung toi da nhan duoc yeu cau dat lai mat khau cho tai khoan cua ban.</p>'
-                        . '<p>Vui long nhan vao link ben duoi de dat lai mat khau (hieu luc trong 60 phut):</p>'
+                    $subject = 'Yêu cầu đặt lại mật khẩu - ' . SITE_NAME;
+                    $htmlBody = '<p>Xin chào ' . sanitize($user['full_name']) . ',</p>'
+                        . '<p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.</p>'
+                        . '<p>Vui lòng nhấn vào liên kết bên dưới để đặt lại mật khẩu (hiệu lực trong 60 phút):</p>'
                         . '<p><a href="' . sanitize($resetLink) . '">' . sanitize($resetLink) . '</a></p>'
-                        . '<p>Neu ban khong thuc hien yeu cau nay, vui long bo qua email nay.</p>';
+                        . '<p>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>';
                     sendEmail($pdo, $user['email'], $subject, $htmlBody);
                 }
             }
 
-            setFlash('success', 'Neu email ton tai trong he thong, chung toi da gui huong dan dat lai mat khau. Vui long kiem tra hop thu.');
+            setFlash('success', 'Nếu email tồn tại trong hệ thống, chúng tôi đã gửi hướng dẫn đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.');
             header('Location: ' . SITE_URL . '/forgot-password.php');
             exit;
         }
     }
 }
 
-$pageTitle = 'Quen mat khau';
+$pageTitle = 'Quên mật khẩu';
 require_once 'includes/header.php';
 ?>
 
 <div class="breadcrumb">
     <div class="container">
         <ul class="breadcrumb-list">
-            <li><a href="<?= SITE_URL ?>"><i class="fas fa-home"></i> Trang chu</a></li>
+            <li><a href="<?= SITE_URL ?>"><i class="fas fa-home"></i> Trang chủ</a></li>
             <li class="separator">/</li>
-            <li class="current">Quen mat khau</li>
+            <li class="current">Quên mật khẩu</li>
         </ul>
     </div>
 </div>
@@ -101,8 +100,8 @@ require_once 'includes/header.php';
         <?php endif; ?>
 
         <div class="form-card-public">
-            <h1>Quen mat khau</h1>
-            <p>Nhap email dang ky. He thong se gui lien ket dat lai mat khau neu tai khoan ton tai.</p>
+            <h1>Quên mật khẩu</h1>
+            <p>Nhập email đăng ký. Hệ thống sẽ gửi liên kết đặt lại mật khẩu nếu tài khoản tồn tại.</p>
 
             <form method="POST" action="">
                 <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
@@ -112,13 +111,12 @@ require_once 'includes/header.php';
                     <input type="email" id="email" name="email" class="form-control" required value="<?= sanitize($email) ?>">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Gui lien ket dat lai mat khau</button>
+                <button type="submit" class="btn btn-primary">Gửi liên kết đặt lại mật khẩu</button>
             </form>
 
-            <p style="margin-top:14px"><a href="<?= SITE_URL ?>/login.php">Quay lai dang nhap</a></p>
+            <p style="margin-top:14px"><a href="<?= SITE_URL ?>/login.php">Quay lại đăng nhập</a></p>
         </div>
     </div>
 </section>
 
 <?php require_once 'includes/footer.php'; ?>
-

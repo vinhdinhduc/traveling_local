@@ -1,7 +1,9 @@
 <?php
 
 $adminTitle = 'Quản lý user';
-require_once dirname(__DIR__) . '/includes/header.php';
+require_once dirname(dirname(__DIR__)) . '/includes/config.php';
+require_once dirname(dirname(__DIR__)) . '/functions.php';
+requireLogin();
 
 if (isset($_GET['toggle'])) {
     $toggleId = (int)$_GET['toggle'];
@@ -30,6 +32,8 @@ $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $users = $stmt->fetchAll();
+
+require_once dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <div class="content-header">

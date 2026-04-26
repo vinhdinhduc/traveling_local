@@ -3,7 +3,9 @@
 
 
 $adminTitle = 'Quản lý liên hệ';
-require_once 'includes/header.php';
+require_once dirname(__DIR__) . '/includes/config.php';
+require_once dirname(__DIR__) . '/functions.php';
+requireLogin();
 
 // Xử lý xóa liên hệ
 if (isset($_GET['delete'])) {
@@ -49,6 +51,8 @@ $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $contacts = $stmt->fetchAll();
+
+require_once 'includes/header.php';
 ?>
 
 <div class="content-header">

@@ -20,8 +20,8 @@ define('GOOGLE_MAPS_API_KEY', '');
 // === CẤU HÌNH CHUYỂN KHOẢN QR ===
 // Thay bằng thông tin tài khoản thực tế của admin/chủ homestay.
 define('PAYMENT_QR_BANK_BIN', '970422');
-define('PAYMENT_QR_ACCOUNT_NO', '19032003');
-define('PAYMENT_QR_ACCOUNT_NAME', 'VAN HO TOURISM');
+define('PAYMENT_QR_ACCOUNT_NO', '0789473833');
+define('PAYMENT_QR_ACCOUNT_NAME', 'THAO A DUONG');
 //aucc umre zwnk vrld
 
 // === ĐƯỜNG DẪN THƯ MỤC ===
